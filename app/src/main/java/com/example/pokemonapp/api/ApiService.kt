@@ -1,6 +1,8 @@
 package com.example.pokemonapp.api
 
 import com.example.pokemonapp.data.models.PokemonListItem
+import com.example.pokemonapp.data.models.response.ability.AbilityItemResponse
+import com.example.pokemonapp.data.models.response.item.PokemonItemResponse
 import com.example.pokemonapp.data.models.response.list.PokemonListResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -15,6 +17,8 @@ interface ApiService {
     ): PokemonListResponse
 
     @GET("api/v2/pokemon/{id}")
-    suspend fun getPokemonById(@Path("id") pokemonID: Int): PokemonListItem
+    suspend fun getPokemonById(@Path("id") pokemonID: Int): PokemonItemResponse
 
+    @GET("api/v2/ability/{id}")
+    suspend fun getAbilityById(@Path("id") abilityID: Int): AbilityItemResponse
 }

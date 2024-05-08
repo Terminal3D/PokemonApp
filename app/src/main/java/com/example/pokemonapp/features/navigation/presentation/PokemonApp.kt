@@ -12,11 +12,8 @@ import com.example.pokemonapp.features.navigation.NavGraph
 @Composable
 fun PokemonApp() {
     PokemonAppTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            NavGraph(
-                navHostController = rememberNavController(),
-                modifier = Modifier.padding(innerPadding)
-            )
-        }
+        NavGraph(
+            navHostController = rememberNavController(),
+        )
     }
 }

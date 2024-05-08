@@ -19,6 +19,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.pokemonapp.R
 import com.example.pokemonapp.data.models.PokemonListItem
+import com.example.pokemonapp.features.pokemonlist.ui.components.PokemonListScreenTopBar
 import com.example.pokemonapp.features.pokemonlist.viewmodel.PokemonListUIState
 import java.util.Locale
 
@@ -60,14 +62,12 @@ fun PokemonListScreenContent(
     pokemonList: List<PokemonListItem>,
     onItemChoose: (Int) -> Unit
 ) {
-    Column(
-        modifier = Modifier.padding(horizontal = 4.dp)
-    ) {
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Text(text = stringResource(R.string.pokemon_list), style = MaterialTheme.typography.displaySmall)
-        }
+    Scaffold(
+        topBar = { PokemonListScreenTopBar() }
+    ) { paddingValues ->
         LazyColumn(
-            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp)
+            contentPadding = PaddingValues(vertical = 8.dp, horizontal = 4.dp),
+            modifier = Modifier.padding(paddingValues)
         ) {
             itemsIndexed(pokemonList) { index, item ->
                 PokemonCard(item) { onItemChoose(item.id) }
