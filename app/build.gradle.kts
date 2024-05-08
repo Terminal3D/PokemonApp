@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.retrofit2.converter.scalars)
 
+    // Coil
+    implementation(libs.coil.compose)
 
     // Navigation Compose
     implementation(libs.androidx.hilt.navigation.compose)

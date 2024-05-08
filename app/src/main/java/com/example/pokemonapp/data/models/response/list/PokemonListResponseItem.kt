@@ -1,8 +1,8 @@
-package com.example.pokemonapp.data.models
+package com.example.pokemonapp.data.models.response.list
 
 import com.google.gson.annotations.SerializedName
 
-data class PokemonResponse(
+data class PokemonListResponseItem(
     @SerializedName("name") var name: String? = null,
     @SerializedName("url") var url: String? = null
 )

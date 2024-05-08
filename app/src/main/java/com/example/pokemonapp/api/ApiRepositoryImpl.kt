@@ -1,6 +1,7 @@
 package com.example.pokemonapp.api
 
 import com.example.pokemonapp.data.models.PokemonListItem
+import java.util.Locale
 import javax.inject.Inject
 
 private const val ICON_SRC_LINK =
@@ -13,15 +14,16 @@ class ApiRepositoryImpl @Inject constructor(
     override suspend fun getPokemonListItems(): List<PokemonListItem> {
         val responsesList = api.getPokemonList()
         val pokemonList = mutableListOf<PokemonListItem>()
-        responsesList.results.forEach {
+        responsesList.results.forEach { item ->
             println()
-            val pokemonId = getIdFromURL(it.url)
+            val pokemonId = getIdFromURL(item.url)
             pokemonList.add(
                 PokemonListItem(
                     id = pokemonId,
-                    name = it.name ?: "",
+                    name = item.name?.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() } ?: "",
                     iconSrc = getIconSrc(pokemonId)
                 )
+
             )
         }
         return pokemonList
