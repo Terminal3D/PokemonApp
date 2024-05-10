@@ -103,9 +103,13 @@ fun PokemonScreenContent(
             }
             Divider(modifier = Modifier.padding(vertical = 8.dp))
             Spacer(modifier = Modifier.height(8.dp))
-            PokemonStatsColumn(stats = pokemon.stats)
-            Divider(modifier = Modifier.padding(vertical = 24.dp))
-            PokemonAbilitiesColumn(abilities = pokemon.abilities)
+            if (pokemon.stats != null) {
+                PokemonStatsColumn(stats = pokemon.stats)
+                Divider(modifier = Modifier.padding(vertical = 24.dp))
+            }
+            if (pokemon.abilities != null) {
+                PokemonAbilitiesColumn(abilities = pokemon.abilities)
+            }
             Spacer(modifier = Modifier.height(32.dp))
         }
     }

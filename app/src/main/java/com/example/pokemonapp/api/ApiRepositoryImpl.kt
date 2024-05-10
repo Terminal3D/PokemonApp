@@ -79,8 +79,17 @@ class ApiRepositoryImpl @Inject constructor(
         val response = api.getPokemonById(id)
 
         val name = capitalizeItem(response.name)
-        val abilities = parseAbilities(response.abilities)
-        val stats = parseStats(response.stats)
+
+        val abilities = if (response.abilities != null) {
+            parseAbilities(response.abilities!!)
+        } else {
+            null
+        }
+        val stats = if (response.stats != null) {
+            parseStats(response.stats!!)
+        } else {
+            null
+        }
 
         return Pokemon(
             name = name,
@@ -90,7 +99,7 @@ class ApiRepositoryImpl @Inject constructor(
         )
     }
 
-    suspend fun parseAbilities(abilitiesResponse: List<Abilities?>): List<Pair<String, String>> {
+    suspend fun parseAbilities(abilitiesResponse: List<Abilities>): List<Pair<String, String>> {
         val abilities = mutableListOf<Pair<String, String>>()
 
         abilitiesResponse.forEach { it ->
