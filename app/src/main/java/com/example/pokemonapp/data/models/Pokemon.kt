@@ -1,8 +1,8 @@
 package com.example.pokemonapp.data.models
 
 data class Pokemon(
-    val name : String,
-    val iconSrc : String,
-    val abilities : List<Pair<String, String>>
-
+    val name : String = "",
+    val iconSrc : String = "",
+    val abilities : List<Pair<String, String>> = listOf(),
+    val stats : Map<String, PokemonStat> = mapOf()
 )

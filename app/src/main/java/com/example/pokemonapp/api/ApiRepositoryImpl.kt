@@ -1,14 +1,47 @@
 package com.example.pokemonapp.api
 
+import com.example.pokemonapp.R
+import com.example.pokemonapp.api.ApiConsts.ATTACK_KEY
+import com.example.pokemonapp.api.ApiConsts.ATTACK_RESPONSE
+import com.example.pokemonapp.api.ApiConsts.DEFENSE_KEY
+import com.example.pokemonapp.api.ApiConsts.DEFENSE_RESPONSE
+import com.example.pokemonapp.api.ApiConsts.HP_KEY
+import com.example.pokemonapp.api.ApiConsts.HP_RESPONSE
+import com.example.pokemonapp.api.ApiConsts.ICON_SRC_LINK
+import com.example.pokemonapp.api.ApiConsts.SPECIAL_ATTACK_KEY
+import com.example.pokemonapp.api.ApiConsts.SPECIAL_ATTACK_RESPONSE
+import com.example.pokemonapp.api.ApiConsts.SPECIAL_DEFENSE_KEY
+import com.example.pokemonapp.api.ApiConsts.SPECIAL_DEFENSE_RESPONSE
+import com.example.pokemonapp.api.ApiConsts.SPEED_KEY
+import com.example.pokemonapp.api.ApiConsts.SPEED_RESPONSE
 import com.example.pokemonapp.data.models.Pokemon
 import com.example.pokemonapp.data.models.PokemonListItem
+import com.example.pokemonapp.data.models.PokemonStat
 import com.example.pokemonapp.data.models.response.item.Abilities
+import com.example.pokemonapp.data.models.response.item.Stats
 import java.util.Locale
 import javax.inject.Inject
 
-private const val ICON_SRC_LINK =
-    "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
 
+object ApiConsts {
+    const val ICON_SRC_LINK =
+        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/"
+
+    const val HP_RESPONSE = "hp"
+    const val ATTACK_RESPONSE = "attack"
+    const val DEFENSE_RESPONSE = "defense"
+    const val SPECIAL_ATTACK_RESPONSE = "special-attack"
+    const val SPECIAL_DEFENSE_RESPONSE = "special-defense"
+    const val SPEED_RESPONSE = "speed"
+
+    const val HP_KEY = "HP"
+    const val ATTACK_KEY = "Attack"
+    const val DEFENSE_KEY = "Defense"
+    const val SPECIAL_ATTACK_KEY = "Sp. Attack"
+    const val SPECIAL_DEFENSE_KEY = "Sp. Defense"
+    const val SPEED_KEY = "Speed"
+
+}
 
 class ApiRepositoryImpl @Inject constructor(
     private val api: ApiService
@@ -47,8 +80,14 @@ class ApiRepositoryImpl @Inject constructor(
 
         val name = capitalizeItem(response.name)
         val abilities = parseAbilities(response.abilities)
+        val stats = parseStats(response.stats)
 
-        return Pokemon(name = name, abilities = abilities, iconSrc = getIconSrc(id))
+        return Pokemon(
+            name = name,
+            abilities = abilities,
+            iconSrc = getIconSrc(id),
+            stats = stats
+        )
     }
 
     suspend fun parseAbilities(abilitiesResponse: List<Abilities?>): List<Pair<String, String>> {
@@ -57,11 +96,55 @@ class ApiRepositoryImpl @Inject constructor(
         abilitiesResponse.forEach { it ->
             val abilityID = getIdFromURL(it?.ability?.url)
             val abilityShortDescription = getAbility(abilityID)
-            val abilityItem = Pair(it?.ability?.name ?: "", abilityShortDescription)
+            val abilityItem = Pair(
+                capitalizeItem(it?.ability?.name) ?: "",
+                capitalizeItem(abilityShortDescription)
+            )
             abilities.add(abilityItem)
         }
 
         return abilities
+    }
+
+    fun parseStats(statsResponse: List<Stats>): Map<String, PokemonStat> {
+        val stats = mutableMapOf<String, PokemonStat>()
+
+        statsResponse.forEach {
+            var key = ""
+            var iconSrc = 0
+            when (it.stat?.name) {
+                HP_RESPONSE -> {
+                    key = HP_KEY
+                    iconSrc = R.drawable.ic_hp
+                }
+                ATTACK_RESPONSE -> {
+                    key = ATTACK_KEY
+                    iconSrc = R.drawable.ic_attack
+                }
+                DEFENSE_RESPONSE -> {
+                    key = DEFENSE_KEY
+                    iconSrc = R.drawable.ic_defense
+                }
+                SPECIAL_ATTACK_RESPONSE -> {
+                    key = SPECIAL_ATTACK_KEY
+                    iconSrc = R.drawable.ic_attack_sp
+                }
+                SPECIAL_DEFENSE_RESPONSE -> {
+                    key = SPECIAL_DEFENSE_KEY
+                    iconSrc = R.drawable.ic_defense_sp
+                }
+                SPEED_RESPONSE -> {
+                    key = SPEED_KEY
+                    iconSrc = R.drawable.ic_speed
+                }
+            }
+            stats[key] = PokemonStat(
+                name = key,
+                value = it.baseStat!!,
+                iconSrc = iconSrc
+            )
+        }
+        return stats
     }
 
     override suspend fun getAbility(id: Int): String {
@@ -69,7 +152,7 @@ class ApiRepositoryImpl @Inject constructor(
         var ability = ""
         response.effectEntries.forEach { it ->
             if (it.language?.name == "en") {
-                ability = it.shortEffect ?: ""
+                ability = capitalizeItem(it.shortEffect)
             }
         }
         return ability
