@@ -1,4 +1,4 @@
-package com.example.pokemonapp.api
+package com.example.pokemonapp.data.remote
 
 import com.example.pokemonapp.data.models.PokemonListItem
 import com.example.pokemonapp.data.models.response.ability.AbilityItemResponse

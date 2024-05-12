@@ -1,19 +1,19 @@
-package com.example.pokemonapp.api
+package com.example.pokemonapp.data.remote
 
 import com.example.pokemonapp.R
-import com.example.pokemonapp.api.ApiConsts.ATTACK_KEY
-import com.example.pokemonapp.api.ApiConsts.ATTACK_RESPONSE
-import com.example.pokemonapp.api.ApiConsts.DEFENSE_KEY
-import com.example.pokemonapp.api.ApiConsts.DEFENSE_RESPONSE
-import com.example.pokemonapp.api.ApiConsts.HP_KEY
-import com.example.pokemonapp.api.ApiConsts.HP_RESPONSE
-import com.example.pokemonapp.api.ApiConsts.ICON_SRC_LINK
-import com.example.pokemonapp.api.ApiConsts.SPECIAL_ATTACK_KEY
-import com.example.pokemonapp.api.ApiConsts.SPECIAL_ATTACK_RESPONSE
-import com.example.pokemonapp.api.ApiConsts.SPECIAL_DEFENSE_KEY
-import com.example.pokemonapp.api.ApiConsts.SPECIAL_DEFENSE_RESPONSE
-import com.example.pokemonapp.api.ApiConsts.SPEED_KEY
-import com.example.pokemonapp.api.ApiConsts.SPEED_RESPONSE
+import com.example.pokemonapp.data.remote.ApiConsts.ATTACK_KEY
+import com.example.pokemonapp.data.remote.ApiConsts.ATTACK_RESPONSE
+import com.example.pokemonapp.data.remote.ApiConsts.DEFENSE_KEY
+import com.example.pokemonapp.data.remote.ApiConsts.DEFENSE_RESPONSE
+import com.example.pokemonapp.data.remote.ApiConsts.HP_KEY
+import com.example.pokemonapp.data.remote.ApiConsts.HP_RESPONSE
+import com.example.pokemonapp.data.remote.ApiConsts.ICON_SRC_LINK
+import com.example.pokemonapp.data.remote.ApiConsts.SPECIAL_ATTACK_KEY
+import com.example.pokemonapp.data.remote.ApiConsts.SPECIAL_ATTACK_RESPONSE
+import com.example.pokemonapp.data.remote.ApiConsts.SPECIAL_DEFENSE_KEY
+import com.example.pokemonapp.data.remote.ApiConsts.SPECIAL_DEFENSE_RESPONSE
+import com.example.pokemonapp.data.remote.ApiConsts.SPEED_KEY
+import com.example.pokemonapp.data.remote.ApiConsts.SPEED_RESPONSE
 import com.example.pokemonapp.data.models.Pokemon
 import com.example.pokemonapp.data.models.PokemonListItem
 import com.example.pokemonapp.data.models.PokemonStat
@@ -46,8 +46,8 @@ object ApiConsts {
 class ApiRepositoryImpl @Inject constructor(
     private val api: ApiService
 ) : ApiRepository {
-    override suspend fun getPokemonListItems(): List<PokemonListItem> {
-        val responsesList = api.getPokemonList()
+    override suspend fun getPokemonListItems(page : Int, pageSize: Int): List<PokemonListItem> {
+        val responsesList = api.getPokemonList(limit = pageSize, offset = page * pageSize)
         val pokemonList = mutableListOf<PokemonListItem>()
         responsesList.results.forEach { item ->
             println()
@@ -92,6 +92,7 @@ class ApiRepositoryImpl @Inject constructor(
         }
 
         return Pokemon(
+            id = response.id!!,
             name = name,
             abilities = abilities,
             iconSrc = getIconSrc(id),
@@ -103,10 +104,10 @@ class ApiRepositoryImpl @Inject constructor(
         val abilities = mutableListOf<Pair<String, String>>()
 
         abilitiesResponse.forEach { it ->
-            val abilityID = getIdFromURL(it?.ability?.url)
+            val abilityID = getIdFromURL(it.ability?.url)
             val abilityShortDescription = getAbility(abilityID)
             val abilityItem = Pair(
-                capitalizeItem(it?.ability?.name) ?: "",
+                capitalizeItem(it.ability?.name) ?: "",
                 capitalizeItem(abilityShortDescription)
             )
             abilities.add(abilityItem)

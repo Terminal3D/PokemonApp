@@ -1,13 +1,12 @@
 package com.example.pokemonapp.di
 
-import com.example.pokemonapp.api.ApiService
+import com.example.pokemonapp.data.remote.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Singleton
 
 @Module

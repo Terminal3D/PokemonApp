@@ -8,14 +8,14 @@ data class PokemonItemResponse(
     @SerializedName("abilities") var abilities: List<Abilities>? = null,
     @SerializedName("stats") var stats: List<Stats>? = null,
     @SerializedName("name") var name: String? = null,
-
+    @SerializedName("id") var id: Int? = null,
 //    @SerializedName("base_experience") var baseExperience: Int? = null,
 //    @SerializedName("cries") var cries: Cries? = Cries(),
 //    @SerializedName("forms") var forms: ArrayList<Forms> = arrayListOf(),
 //    @SerializedName("game_indices") var gameIndices: ArrayList<GameIndices> = arrayListOf(),
 //    @SerializedName("height") var height: Int? = null,
 //    @SerializedName("held_items") var heldItems: ArrayList<String> = arrayListOf(),
-//    @SerializedName("id") var id: Int? = null,
+
 //    @SerializedName("is_default") var isDefault: Boolean? = null,
 //    @SerializedName("location_area_encounters") var locationAreaEncounters: String? = null,
 //    @SerializedName("moves") var moves: ArrayList<Moves> = arrayListOf(),

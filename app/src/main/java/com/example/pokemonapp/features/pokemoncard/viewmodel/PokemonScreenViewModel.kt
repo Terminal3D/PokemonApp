@@ -1,12 +1,11 @@
 package com.example.pokemonapp.features.pokemoncard.viewmodel
 
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pokemonapp.api.ApiRepository
+import com.example.pokemonapp.data.local.PokemonDatabase
+import com.example.pokemonapp.data.mappers.toEntity
+import com.example.pokemonapp.data.remote.ApiRepository
 import com.example.pokemonapp.data.models.Pokemon
-import com.example.pokemonapp.features.pokemonlist.viewmodel.PokemonListUIState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +26,8 @@ sealed interface PokemonScreenUiState {
 
 @HiltViewModel
 class PokemonScreenViewModel @Inject constructor(
-    private val apiRepository: ApiRepository
+    private val apiRepository: ApiRepository,
+    private val db : PokemonDatabase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<PokemonScreenUiState>(PokemonScreenUiState.Loading)
@@ -37,9 +37,16 @@ class PokemonScreenViewModel @Inject constructor(
         _state.update { PokemonScreenUiState.Loading }
         try {
             val pokemon = apiRepository.getPokemon(id)
+            db.dao.upsertPokemon(pokemon.toEntity())
             _state.update { PokemonScreenUiState.Success(pokemon) }
         } catch (e: Exception) {
-            _state.update { PokemonScreenUiState.Error(e.toString()) }
+            val pokemon = db.dao.getPokemon(id)
+            if (pokemon != null) {
+                _state.update { PokemonScreenUiState.Success(pokemon) }
+            } else {
+                _state.update { PokemonScreenUiState.Error(e.toString()) }
+            }
+
         }
     }
 

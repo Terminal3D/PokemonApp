@@ -1,11 +1,11 @@
-package com.example.pokemonapp.api
+package com.example.pokemonapp.data.remote
 
 import com.example.pokemonapp.data.models.Pokemon
 import com.example.pokemonapp.data.models.PokemonListItem
 
 interface ApiRepository {
 
-    suspend fun getPokemonListItems(): List<PokemonListItem>
+    suspend fun getPokemonListItems(page: Int, pageSize : Int): List<PokemonListItem>
 
     suspend fun getPokemon(id: Int): Pokemon
 

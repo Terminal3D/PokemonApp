@@ -115,13 +115,13 @@ fun PokemonScreenContent(
     }
 }
 
-@Preview
-@Composable
-fun PokemonScreenPreview() {
-    PokemonScreenContent(
-        pokemon = Pokemon(),
-
-        ) {
-
-    }
-}
+//@Preview
+//@Composable
+//fun PokemonScreenPreview() {
+//    PokemonScreenContent(
+//        pokemon = Pokemon(),
+//
+//        ) {
+//
+//    }
+//}

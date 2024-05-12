@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.pokemonapp.features.pokemoncard.ui.PokemonScreen
 import com.example.pokemonapp.features.pokemoncard.viewmodel.PokemonScreenViewModel
 import com.example.pokemonapp.features.pokemonlist.ui.PokemonListScreen
@@ -25,9 +26,9 @@ fun NavGraph(
     ) {
         composable(Sections.ListScreen.ROUTE) {
             val pokemonListViewModel = hiltViewModel<PokemonListViewModel>()
-            val state = pokemonListViewModel.state.collectAsState()
+            val pokemons = pokemonListViewModel.pokemonPagingFlow.collectAsLazyPagingItems()
             PokemonListScreen(
-                uiState = state.value,
+                pokemonList = pokemons,
                 onItemChoose = { id -> navHostController.navigate(Sections.ItemScreen.getRoute(id))}
             )
         }

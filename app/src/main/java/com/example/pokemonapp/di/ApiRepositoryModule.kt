@@ -1,7 +1,7 @@
 package com.example.pokemonapp.di
 
-import com.example.pokemonapp.api.ApiRepository
-import com.example.pokemonapp.api.ApiRepositoryImpl
+import com.example.pokemonapp.data.remote.ApiRepository
+import com.example.pokemonapp.data.remote.ApiRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
